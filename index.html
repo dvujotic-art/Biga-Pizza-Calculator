@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<meta name="theme-color" content="#b03a2e">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Biga-Pizza-Calculator</title>
@@ -153,6 +156,9 @@
     document.getElementById('fin-salt').textContent   = fmt(fSalt, 0);
     document.getElementById('fin-total').textContent  = fmt(fTotal, 0);
 
+    var gareText = hours === 48
+      ? '<b>48 h Vorgare</b> → anschließend ca. <b>24 h Fertiggare</b> im Kühlschrank.'
+      : '<b>24 h Vorgare</b> → anschließend <b>bis zu 48 h Fertiggare</b> möglich (je kühler, desto langsamer).';
     var fridge = hours === 48 ? 24 : 48;
     document.getElementById('gare').innerHTML =
       '<b>Garplan:</b> Der Vorteig ruht 1 Stunde bei Raumtemperatur, dann ' + hours + ' Stunden im K\u00fchlschrank. ' +
@@ -167,5 +173,6 @@
   });
   calc();
 </script>
+<script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");</script>
 </body>
 </html>
