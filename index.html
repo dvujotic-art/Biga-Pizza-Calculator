@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<meta name="theme-color" content="#b03a2e">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biga-Pizza-Calculator</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: #f7f2ea;
+    color: #2b2320;
+    min-height: 100vh;
+    display: flex; justify-content: center;
+    padding: 24px 12px;
+  }
+  .card {
+    background: #fffdf9;
+    border: 1px solid #e3d9c8;
+    border-radius: 14px;
+    max-width: 520px; width: 100%;
+    padding: 28px 28px 20px;
+    box-shadow: 0 4px 18px rgba(120,80,40,.08);
+  }
+  h1 {
+    font-size: 24px; font-weight: 700; color: #b03a2e;
+    text-align: center; margin-bottom: 2px;
+  }
+  .sub { text-align:center; font-size: 13px; color: #8a7d6b; margin-bottom: 20px; }
+  .section-title {
+    font-size: 13px; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: #b03a2e;
+    border-bottom: 2px solid #efd9c1; padding-bottom: 4px; margin: 18px 0 10px;
+  }
+  .row { display:flex; align-items:center; gap:12px; margin-bottom: 10px; }
+  .row label { flex:1; font-size: 15px; }
+  .row .hint { flex:1.6; font-size: 12px; color: #9a8d7a; }
+  input, select {
+    font: inherit; width: 110px; text-align: center;
+    padding: 7px 8px; border: 1px solid #d8cbb5; border-radius: 8px;
+    background: #fff; color: #2b2320;
+  }
+  input:focus, select:focus { outline: 2px solid #b03a2e; outline-offset: 1px; border-color: #b03a2e; }
+  table { width:100%; border-collapse: collapse; font-size: 15px; }
+  td { padding: 6px 4px; border-bottom: 1px dashed #e8ddc9; }
+  td.val { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td.unit { text-align:left; color:#8a7d6b; font-size:13px; width: 40px; padding-left:6px;}
+  tr.total td { border-bottom: none; border-top: 2px solid #efd9c1; font-weight:700; }
+  .gare {
+    margin-top: 18px; background: #f6ecdd; border-radius: 10px;
+    padding: 12px 14px; font-size: 14px; line-height: 1.55;
+  }
+  .gare b { color: #b03a2e; }
+  .foot { margin-top: 16px; font-size: 11.5px; color: #a2947f; text-align:center; line-height:1.5; }
+  @media print { body { background:#fff; } .card { box-shadow:none; border:none; } }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>🍕 Biga-Pizza-Calculator</h1>
+  <div class="sub">Neapolitanischer Pizzateig mit Biga-Vorteig</div>
+
+  <div class="section-title">Eingaben</div>
+  <div class="row">
+    <label for="balls">Anzahl Teigkugeln</label>
+    <select id="balls"></select>
+    <div class="hint">1–12 Kugeln</div>
+  </div>
+  <div class="row">
+    <label for="weight">Gewicht pro Kugel</label>
+    <input id="weight" type="number" value="260" min="100" max="500" step="5">
+    <div class="hint">Gramm, z. B. 250–280</div>
+  </div>
+  <div class="row">
+    <label for="hydration">Hydration</label>
+    <input id="hydration" type="number" value="68" min="55" max="80" step="1">
+    <div class="hint">Wasseranteil in % (55–80)</div>
+  </div>
+  <div class="row">
+    <label for="hours">Vorgare (Biga)</label>
+    <select id="hours">
+      <option value="24">24 Stunden</option>
+      <option value="48" selected>48 Stunden</option>
+    </select>
+    <div class="hint">Garzeit des Vorteigs</div>
+  </div>
+
+  <div class="section-title">Schritt 1 · Biga-Vorteig</div>
+  <table>
+    <tr><td>Mehl</td><td class="val" id="biga-flour">–</td><td class="unit">g</td></tr>
+    <tr><td>Kaltes Wasser</td><td class="val" id="biga-water">–</td><td class="unit">g</td></tr>
+    <tr><td>Frische Hefe</td><td class="val" id="biga-yeast">–</td><td class="unit">g</td></tr>
+    <tr class="total"><td>Biga gesamt</td><td class="val" id="biga-total">–</td><td class="unit">g</td></tr>
+  </table>
+
+  <div class="section-title">Schritt 2 · Fertigteig</div>
+  <table>
+    <tr><td>Biga (gesamt dazugeben)</td><td class="val" id="fin-biga">–</td><td class="unit">g</td></tr>
+    <tr><td>Restliches eiskaltes Wasser</td><td class="val" id="fin-water">–</td><td class="unit">g</td></tr>
+    <tr><td>Frische Hefe (im Wasser lösen)</td><td class="val" id="fin-yeast">–</td><td class="unit">g</td></tr>
+    <tr><td>Salz (im Wasser lösen)</td><td class="val" id="fin-salt">–</td><td class="unit">g</td></tr>
+    <tr class="total"><td>Fertigteig gesamt</td><td class="val" id="fin-total">–</td><td class="unit">g</td></tr>
+  </table>
+
+  <div class="gare" id="gare"></div>
+
+  <div class="foot">
+    Alle Mengen beziehen sich auf frische Hefe (Trockenhefe: ÷ 3).<br>
+    Skalierung: Gesamtteig ÷ (1000 g Mehl + Wasser + 30 g Salz + 4 g Hefe).
+  </div>
+</div>
+
+<script>
+  var ballsSel = document.getElementById('balls');
+  for (var i = 1; i <= 12; i++) {
+    var o = document.createElement('option');
+    o.value = i; o.textContent = i + (i === 4 ? '  (Standard)' : '');
+    if (i === 4) o.selected = true;
+    ballsSel.appendChild(o);
+  }
+
+  function fmt(n, d) {
+    return n.toLocaleString('de-DE', { minimumFractionDigits: d, maximumFractionDigits: d });
+  }
+
+  function calc() {
+    var balls = parseInt(ballsSel.value, 10);
+    var weight = parseFloat(document.getElementById('weight').value) || 0;
+    var hyd = parseFloat(document.getElementById('hydration').value) || 0;
+    var hours = parseInt(document.getElementById('hours').value, 10);
+
+    var totalDough = balls * weight;
+    // Pro 1000 g Mehl: 1000 Mehl + hyd*10 Wasser + 30 Salz + 4 Hefe
+    var factor = totalDough / (1034 + 10 * hyd);
+
+    var bFlour = Math.round(1000 * factor);
+    var bWater = Math.round(500 * factor);
+    var bYeast = Math.round(3 * factor * 10) / 10;
+    var bTotal = bFlour + bWater + bYeast;
+
+    var fWater = Math.round((10 * hyd - 500) * factor);
+    var fYeast = Math.round(1 * factor * 10) / 10;
+    var fSalt  = Math.round(30 * factor);
+    var fTotal = bTotal + fWater + fYeast + fSalt;
+
+    document.getElementById('biga-flour').textContent = fmt(bFlour, 0);
+    document.getElementById('biga-water').textContent = fmt(bWater, 0);
+    document.getElementById('biga-yeast').textContent = fmt(bYeast, 1);
+    document.getElementById('biga-total').textContent = fmt(bTotal, 0);
+    document.getElementById('fin-biga').textContent   = fmt(bTotal, 0);
+    document.getElementById('fin-water').textContent  = fmt(fWater, 0);
+    document.getElementById('fin-yeast').textContent  = fmt(fYeast, 1);
+    document.getElementById('fin-salt').textContent   = fmt(fSalt, 0);
+    document.getElementById('fin-total').textContent  = fmt(fTotal, 0);
+
+    var gareText = hours === 48
+      ? '<b>48 h Vorgare</b> → anschließend ca. <b>24 h Fertiggare</b> im Kühlschrank.'
+      : '<b>24 h Vorgare</b> → anschließend <b>bis zu 48 h Fertiggare</b> möglich (je kühler, desto langsamer).';
+    document.getElementById('gare').innerHTML =
+      '<b>Garplan:</b> Biga ' + hours + ' h reifen lassen (12–18 h Raumtemperatur, dann kühl). ' +
+      gareText +
+      ' Danach ' + balls + ' Kugeln à ' + fmt(weight, 0) + ' g formen und 1–2 h bei Raumtemperatur ziehen lassen. Backen bei 450–500 °C.';
+  }
+
+  ['balls','weight','hydration','hours'].forEach(function(id){
+    document.getElementById(id).addEventListener('input', calc);
+    document.getElementById(id).addEventListener('change', calc);
+  });
+  calc();
+</script>
+<script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");</script>
+</body>
+</html>
