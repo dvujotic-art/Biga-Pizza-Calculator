@@ -117,7 +117,7 @@
   var ballsSel = document.getElementById('balls');
   for (var i = 1; i <= 12; i++) {
     var o = document.createElement('option');
-    o.value = i; o.textContent = i + (i === 4 ? '  (Standard)' : '');
+    o.value = i; o.textContent = i;
     if (i === 4) o.selected = true;
     ballsSel.appendChild(o);
   }
@@ -131,6 +131,7 @@
     localStorage.setItem('biga-balls', ballsSel.value);
     localStorage.setItem('biga-weight', document.getElementById('weight').value);
     localStorage.setItem('biga-hyd', document.getElementById('hydration').value);
+    localStorage.setItem('biga-hours', document.getElementById('hours').value);
   } catch (e) {}
 
     var balls = parseInt(ballsSel.value, 10);
@@ -185,6 +186,8 @@
     if (sW) document.getElementById('weight').value = sW;
     var sH = localStorage.getItem('biga-hyd');
     if (sH) document.getElementById('hydration').value = sH;
+    var sT = localStorage.getItem('biga-hours');
+    if (sT) document.getElementById('hours').value = sT;
   } catch (e) {}
   calc();
 </script>
