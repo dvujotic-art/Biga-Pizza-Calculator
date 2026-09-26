@@ -127,6 +127,12 @@
   }
 
   function calc() {
+  try {
+    localStorage.setItem('biga-balls', ballsSel.value);
+    localStorage.setItem('biga-weight', document.getElementById('weight').value);
+    localStorage.setItem('biga-hyd', document.getElementById('hydration').value);
+  } catch (e) {}
+
     var balls = parseInt(ballsSel.value, 10);
     var weight = parseFloat(document.getElementById('weight').value) || 0;
     var hyd = parseFloat(document.getElementById('hydration').value) || 0;
@@ -171,6 +177,15 @@
     document.getElementById(id).addEventListener('input', calc);
     document.getElementById(id).addEventListener('change', calc);
   });
+
+  try {
+    var sB = localStorage.getItem('biga-balls');
+    if (sB) ballsSel.value = sB;
+    var sW = localStorage.getItem('biga-weight');
+    if (sW) document.getElementById('weight').value = sW;
+    var sH = localStorage.getItem('biga-hyd');
+    if (sH) document.getElementById('hydration').value = sH;
+  } catch (e) {}
   calc();
 </script>
 <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");</script>
